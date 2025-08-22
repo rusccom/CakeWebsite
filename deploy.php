@@ -24,11 +24,24 @@ function writeLog($message) {
 writeLog("=== Начало развертывания ===");
 
 try {
-    // Переходим в папку проекта
+    // Определяем папки
     $projectDir = __DIR__;
-    chdir($projectDir);
+    $publicHtmlDir = '/home/' . get_current_user() . '/public_html';
     
+    // Если мы уже в public_html - хорошо
+    if (strpos($projectDir, 'public_html') !== false) {
+        $targetDir = $projectDir;
+        $needCopy = false;
+    } else {
+        // Если мы не в public_html - будем копировать туда
+        $targetDir = $publicHtmlDir;
+        $needCopy = true;
+    }
+    
+    chdir($projectDir);
     writeLog("Рабочая папка: $projectDir");
+    writeLog("Целевая папка: $targetDir");
+    writeLog("Нужно копирование: " . ($needCopy ? 'да' : 'нет'));
     
     // Проверяем наличие Git
     exec('which git 2>/dev/null', $output, $gitCheck);
@@ -89,10 +102,46 @@ try {
         writeLog("Создана папка data/photos/");
     }
     
-    // Устанавливаем права
-    chmod('data', 0755);
-    chmod('data/photos', 0755);
-    writeLog("Установлены права на папки");
+    // Копируем файлы в public_html если нужно
+    if ($needCopy) {
+        writeLog("Копируем файлы в public_html...");
+        
+        // Список файлов для копирования
+        $filesToCopy = [
+            'index.html', 'admin.html', 'api.php', 'deploy.php',
+            'assets/', 'data/'
+        ];
+        
+        foreach ($filesToCopy as $item) {
+            $source = $projectDir . '/' . $item;
+            $dest = $targetDir . '/' . $item;
+            
+            if (file_exists($source)) {
+                if (is_dir($source)) {
+                    exec("cp -r '$source' '$dest'", $copyOutput, $copyResult);
+                } else {
+                    exec("cp '$source' '$dest'", $copyOutput, $copyResult);
+                }
+                
+                if ($copyResult === 0) {
+                    writeLog("Скопировано: $item");
+                } else {
+                    writeLog("Ошибка копирования: $item");
+                }
+            }
+        }
+        
+        // Устанавливаем права в целевой папке
+        chdir($targetDir);
+        chmod('data', 0755);
+        chmod('data/photos', 0755);
+        writeLog("Установлены права в public_html");
+    } else {
+        // Устанавливаем права в текущей папке
+        chmod('data', 0755);
+        chmod('data/photos', 0755);
+        writeLog("Установлены права на папки");
+    }
     
     $deployTime = date('Y-m-d H:i:s');
     writeLog("=== Развертывание завершено успешно: $deployTime ===");
