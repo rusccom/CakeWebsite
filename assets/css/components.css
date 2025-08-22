@@ -49,11 +49,7 @@
     transform: scale(1);
 }
 
-.product-card.hidden {
-    opacity: 0;
-    transform: scale(0.8);
-    pointer-events: none;
-}
+
 
 .product-card:hover {
     transform: translateY(-10px);

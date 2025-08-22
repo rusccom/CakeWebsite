@@ -133,19 +133,25 @@ dataManager.loadData().then(() => {
     CAKES_DATA = dataManager.getProducts();
     CATEGORIES = dataManager.getCategories();
     
+    console.log('🎂 Data loaded for main site:', CAKES_DATA.length, 'products,', Object.keys(CATEGORIES).length, 'categories');
+    
     // Update global references
     window.CAKES_DATA = CAKES_DATA;
     window.CATEGORIES = CATEGORIES;
     
     // Trigger update for any existing components
     if (window.catalogManager) {
+        console.log('🔄 Updating catalog manager...');
         window.catalogManager.renderProducts();
     }
     
     // Custom event for components that need to know when data is loaded
+    console.log('📡 Dispatching dataLoaded event...');
     window.dispatchEvent(new CustomEvent('dataLoaded', { 
         detail: { products: CAKES_DATA, categories: CATEGORIES }
     }));
+}).catch(error => {
+    console.error('❌ Error in data loading:', error);
 });
 
 // Export for backward compatibility and admin access

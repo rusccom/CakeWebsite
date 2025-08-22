@@ -57,8 +57,11 @@ class ProductModal {
     }
 
     openModal(productId) {
-        const product = CAKES_DATA.find(cake => cake.id === productId);
-        if (!product) return;
+        const product = window.CAKES_DATA?.find(cake => cake.id === productId);
+        if (!product) {
+            console.error('Product not found:', productId, 'Available products:', window.CAKES_DATA?.length);
+            return;
+        }
 
         this.currentProduct = product;
         this.images = product.images || [product.image];
@@ -99,7 +102,7 @@ class ProductModal {
         document.getElementById('modalProductWeight').textContent = product.weight;
         document.getElementById('modalProductServes').textContent = product.serves;
         document.getElementById('modalProductPrice').textContent = this.formatPrice(product.price);
-        document.getElementById('modalProductCategory').textContent = CATEGORIES[product.category];
+        document.getElementById('modalProductCategory').textContent = window.CATEGORIES?.[product.category] || product.category;
 
 
     }

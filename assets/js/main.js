@@ -31,87 +31,47 @@ class CakeShopApp {
     }
 
     setupMobileMenu() {
-        // Create mobile menu toggle if screen is small
-        if (window.innerWidth <= 768) {
-            this.createMobileMenu();
-        }
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                this.createMobileMenu();
-            } else {
-                this.removeMobileMenu();
-            }
-        });
-    }
-
-    createMobileMenu() {
-        const header = document.querySelector('.header-content');
-        if (!header || header.querySelector('.mobile-menu-toggle')) return;
-
-        const toggle = document.createElement('button');
-        toggle.className = 'mobile-menu-toggle';
-        toggle.innerHTML = '☰';
-        toggle.style.cssText = `
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            cursor: pointer;
-            display: block;
-            order: 3;
-        `;
-
-        const nav = header.querySelector('.nav');
-        toggle.addEventListener('click', () => {
-            nav.classList.toggle('mobile-open');
-        });
-
-        header.appendChild(toggle);
-
-        // Add mobile styles to nav
-        nav.style.cssText += `
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: var(--shadow);
-            transform: translateY(-100%);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        `;
-
-        nav.querySelector('.nav-list').style.cssText += `
-            flex-direction: column;
-            padding: 1rem;
-            gap: 1rem;
-        `;
-
-        // Add mobile-open class styles
-        const style = document.createElement('style');
-        style.textContent = `
-            .nav.mobile-open {
-                transform: translateY(0) !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    removeMobileMenu() {
-        const toggle = document.querySelector('.mobile-menu-toggle');
-        const nav = document.querySelector('.nav');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const nav = document.getElementById('mainNav');
         
-        if (toggle) toggle.remove();
-        if (nav) {
-            nav.style.cssText = '';
-            nav.classList.remove('mobile-open');
-            nav.querySelector('.nav-list').style.cssText = '';
-        }
+        if (!mobileMenuBtn || !nav) return;
+
+        // Mobile menu toggle functionality
+        mobileMenuBtn.addEventListener('click', () => {
+            const isActive = mobileMenuBtn.classList.contains('active');
+            
+            if (isActive) {
+                mobileMenuBtn.classList.remove('active');
+                nav.classList.remove('active');
+            } else {
+                mobileMenuBtn.classList.add('active');
+                nav.classList.add('active');
+            }
+        });
+
+        // Close menu when clicking on navigation links
+        nav.querySelectorAll('.nav-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                nav.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenuBtn.classList.remove('active');
+                nav.classList.remove('active');
+            }
+        });
+
+        // Close menu on window resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileMenuBtn.classList.remove('active');
+                nav.classList.remove('active');
+            }
+        });
     }
 
     setupScrollEffects() {
@@ -275,7 +235,7 @@ loadingStyle.textContent = `
     }
     
     body:not(.loaded)::after {
-        content: '🎂';
+        content: '🧁';
         position: fixed;
         top: 50%;
         left: 50%;

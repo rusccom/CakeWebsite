@@ -27,29 +27,69 @@ class CatalogManager {
         activeButton.classList.add('active');
     }
 
+    updateFilterButtons() {
+        // Обновляем обработчики для существующих кнопок
+        this.filterButtons = document.querySelectorAll('.filter-btn');
+        this.setupFilterButtons();
+        
+        // Показываем/скрываем кнопки на основе доступных категорий
+        this.filterButtons.forEach(button => {
+            const category = button.dataset.category;
+            if (category === 'all') {
+                button.style.display = 'block'; // Всегда показываем "Все товары"
+                return;
+            }
+            
+            // Проверяем есть ли товары в этой категории
+            const hasProducts = window.CAKES_DATA && window.CAKES_DATA.some(product => product.category === category);
+            button.style.display = hasProducts ? 'block' : 'none';
+        });
+    }
+
     filterProducts(category) {
         this.currentCategory = category;
-        const productCards = this.productsGrid.querySelectorAll('.product-card');
-        
-        productCards.forEach(card => {
-            const cardCategory = card.dataset.category;
-            if (category === 'all' || cardCategory === category) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
+        this.renderFilteredProducts(category);
+    }
+
+    renderFilteredProducts(category) {
+        if (!this.productsGrid) return;
+
+        // Проверяем что данные загружены
+        if (!window.CAKES_DATA || window.CAKES_DATA.length === 0) {
+            this.productsGrid.innerHTML = '<p style="text-align: center; padding: 2rem; color: #6b7280;">Загрузка товаров...</p>';
+            return;
+        }
+
+        // Фильтруем товары
+        let filteredProducts;
+        if (category === 'all') {
+            filteredProducts = window.CAKES_DATA;
+        } else {
+            filteredProducts = window.CAKES_DATA.filter(cake => cake.category === category);
+        }
+
+        // Очищаем сетку и добавляем отфильтрованные товары
+        this.productsGrid.innerHTML = '';
+
+        if (filteredProducts.length === 0) {
+            this.productsGrid.innerHTML = `
+                <div class="no-results">
+                    <h3>Товары не найдены</h3>
+                    <p>В этой категории пока нет товаров</p>
+                </div>
+            `;
+            return;
+        }
+
+        filteredProducts.forEach(cake => {
+            const productCard = this.createProductCard(cake);
+            this.productsGrid.appendChild(productCard);
         });
     }
 
     renderProducts() {
-        if (!this.productsGrid) return;
-
-        this.productsGrid.innerHTML = '';
-
-        CAKES_DATA.forEach(cake => {
-            const productCard = this.createProductCard(cake);
-            this.productsGrid.appendChild(productCard);
-        });
+        // Используем текущую категорию для фильтрации
+        this.renderFilteredProducts(this.currentCategory);
     }
 
     createProductCard(cake) {
@@ -109,7 +149,12 @@ class CatalogManager {
 
     // Method for searching products
     searchProducts(searchTerm) {
-        const filteredCakes = CAKES_DATA.filter(cake => 
+        if (!window.CAKES_DATA || window.CAKES_DATA.length === 0) {
+            this.productsGrid.innerHTML = '<p style="text-align: center; padding: 2rem; color: #6b7280;">Данные еще загружаются...</p>';
+            return;
+        }
+
+        const filteredCakes = window.CAKES_DATA.filter(cake => 
             cake.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cake.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -135,4 +180,18 @@ class CatalogManager {
 // Initialize catalog when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.catalogManager = new CatalogManager();
+    
+    // Listen for data updates from API
+    window.addEventListener('dataLoaded', (event) => {
+        console.log('Data updated, re-rendering products...');
+        // Update global references
+        window.CAKES_DATA = event.detail.products;
+        window.CATEGORIES = event.detail.categories;
+        
+        // Re-render products with new data
+        window.catalogManager.renderProducts();
+        
+        // Update filter buttons with new categories
+        window.catalogManager.updateFilterButtons();
+    });
 });
