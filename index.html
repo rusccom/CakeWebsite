@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торты от Души - Лучшие торты на заказ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎂 Торты от Души</h1>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#catalog">Каталог</a></li>
+                        <li><a href="#about">О нас</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Торты, которые дарят радость</h2>
+                <p class="hero-subtitle">Создаем незабываемые моменты с нашими авторскими тортами</p>
+                <button class="cta-btn" onclick="scrollToSection('catalog')">Посмотреть каталог</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">Все торты</button>
+                <button class="filter-btn" data-category="chocolate">Шоколадные</button>
+                <button class="filter-btn" data-category="fruit">Фруктовые</button>
+                <button class="filter-btn" data-category="cheesecake">Чизкейки</button>
+                <button class="filter-btn" data-category="wedding">Свадебные</button>
+                <button class="filter-btn" data-category="children">Детские</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog -->
+    <section id="catalog" class="catalog">
+        <div class="container">
+            <h2 class="section-title">Наши торты</h2>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">О нашей кондитерской</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Мы создаем торты с любовью уже более 10 лет. Каждый торт — это произведение искусства, созданное из натуральных ингредиентов высшего качества.</p>
+                    <ul class="features-list">
+                        <li>✨ Только натуральные ингредиенты</li>
+                        <li>🎨 Индивидуальный дизайн</li>
+                        <li>🚚 Бесплатная доставка от 3000₽</li>
+                        <li>⭐ Более 1000 довольных клиентов</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>📞 Телефон</h3>
+                    <p>+7 (999) 123-45-67</p>
+                </div>
+                <div class="contact-item">
+                    <h3>📍 Адрес</h3>
+                    <p>г. Москва, ул. Сладкая, д. 123</p>
+                </div>
+                <div class="contact-item">
+                    <h3>⏰ Время работы</h3>
+                    <p>Пн-Вс: 9:00 - 21:00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content product-modal-content">
+            <div class="modal-header">
+                <h3 id="modalProductTitle">Название торта</h3>
+                <button class="close-btn" id="closeProductModal">&times;</button>
+            </div>
+            <div class="modal-body product-modal-body">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img id="modalMainImage" src="" alt="" class="main-image">
+                        <button class="gallery-btn prev-btn" id="prevImage">‹</button>
+                        <button class="gallery-btn next-btn" id="nextImage">›</button>
+                        <div class="image-counter">
+                            <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
+                        </div>
+                    </div>
+                    <div class="gallery-thumbnails" id="galleryThumbnails">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div class="product-description-full" id="modalProductDescription">
+                        Подробное описание торта
+                    </div>
+                    <div class="product-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Вес:</span>
+                            <span class="spec-value" id="modalProductWeight">1 кг</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Порций:</span>
+                            <span class="spec-value" id="modalProductServes">6-8</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Цена:</span>
+                            <span class="spec-value price" id="modalProductPrice">2000₽</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Категория:</span>
+                            <span class="spec-value" id="modalProductCategory">Шоколадные</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/catalog.js"></script>
+    <script src="assets/js/product-modal.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# Настройки для Apache хостинга
+RewriteEngine On
+
+# Переадресация API запросов на app.py
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteRule ^api/(.*)$ app.py [L,QSA]
+
+# Основные файлы отдаются напрямую
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [L]
+
+# Настройки для загрузки файлов
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+
+# Запрет доступа к служебным файлам
+<Files "app.py">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "requirements.txt">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "wsgi.py">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Разрешить доступ к JSON и фото
+<Files "*.json">
+    Order allow,deny
+    Allow from all
+</Files>
