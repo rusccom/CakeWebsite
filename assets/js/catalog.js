@@ -108,7 +108,6 @@ class CatalogManager {
                 <p class="product-description">${cake.description}</p>
                 <div class="product-details">
                     <span class="weight">${cake.weight}</span>
-                    <span class="serves">${cake.serves}</span>
                 </div>
                 <div class="product-price">${this.formatPrice(cake.price)}</div>
                 <div class="product-view-hint">
@@ -140,11 +139,9 @@ class CatalogManager {
 
     formatPrice(price) {
         return new Intl.NumberFormat('ru-RU', {
-            style: 'currency',
-            currency: 'RUB',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
-        }).format(price);
+        }).format(price) + ' руб.';
     }
 
     // Method for searching products

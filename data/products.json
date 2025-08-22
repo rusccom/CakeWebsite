@@ -1,4 +1,9 @@
 {
+  "settings": {
+    "hero_banner": "banner.jpeg",
+    "hero_title": "Торты, которые дарят радость",
+    "hero_subtitle": "Создаем незабываемые моменты с нашими авторскими тортами"
+  },
   "categories": [
     {
       "id": "chocolate",

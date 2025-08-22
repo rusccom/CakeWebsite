@@ -4,6 +4,7 @@ class DataManager {
         this.data = null;
         this.products = [];
         this.categories = {};
+        this.settings = {};
     }
 
     async loadData() {
@@ -47,6 +48,10 @@ class DataManager {
                 : ['https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&h=500&fit=crop'],
             fullDescription: product.description // Use single description field
         }));
+        
+        // Load settings
+        this.settings = this.data.settings || {};
+        this.applyHeroBanner();
         
         return true;
     }
@@ -113,6 +118,35 @@ class DataManager {
             return this.products;
         }
         return this.products.filter(product => product.category === categoryId);
+    }
+
+    getSettings() {
+        return this.settings;
+    }
+
+    applyHeroBanner() {
+        const heroSection = document.querySelector('.hero');
+        if (!heroSection) return;
+
+        // Применяем заголовки
+        if (this.settings.hero_title) {
+            const titleElement = document.querySelector('.hero-title');
+            if (titleElement) titleElement.textContent = this.settings.hero_title;
+        }
+
+        if (this.settings.hero_subtitle) {
+            const subtitleElement = document.querySelector('.hero-subtitle');
+            if (subtitleElement) subtitleElement.textContent = this.settings.hero_subtitle;
+        }
+
+        // Применяем баннер
+        if (this.settings.hero_banner) {
+            heroSection.style.backgroundImage = `url('data/banners/${this.settings.hero_banner}')`;
+            console.log('🖼️ Hero banner applied:', this.settings.hero_banner);
+        } else {
+            // Используем градиент по умолчанию
+            heroSection.style.backgroundImage = 'none';
+        }
     }
 }
 

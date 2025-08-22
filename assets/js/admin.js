@@ -335,16 +335,13 @@ class AdminApp {
                         </div>
                         <div class="info-item">
                             <span class="info-label">Цена:</span>
-                            <span>${product.price} ₽</span>
+                            <span>${product.price} руб.</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Вес:</span>
                             <span>${product.weight || 'Не указан'}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Порций:</span>
-                            <span>${product.serves || 'Не указано'}</span>
-                        </div>
+
                     </div>
                     <p style="margin: 1rem 0; color: #6b7280;">${product.description}</p>
                     ${product.photos && product.photos.length > 0 ? `
@@ -502,7 +499,6 @@ class AdminApp {
         document.getElementById('productPrice').value = product.price;
         document.getElementById('productCategory').value = product.category;
         document.getElementById('productWeight').value = product.weight || '';
-        document.getElementById('productServes').value = product.serves || '';
         
         // Handle photos
         this.selectedPhotos = product.photos ? [...product.photos] : [];
@@ -518,7 +514,6 @@ class AdminApp {
             price: parseInt(document.getElementById('productPrice').value),
             category: document.getElementById('productCategory').value,
             weight: document.getElementById('productWeight').value,
-            serves: document.getElementById('productServes').value,
             photos: this.selectedPhotos
         };
 

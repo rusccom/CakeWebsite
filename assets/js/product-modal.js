@@ -100,7 +100,6 @@ class ProductModal {
 
         // Set specifications
         document.getElementById('modalProductWeight').textContent = product.weight;
-        document.getElementById('modalProductServes').textContent = product.serves;
         document.getElementById('modalProductPrice').textContent = this.formatPrice(product.price);
         document.getElementById('modalProductCategory').textContent = window.CATEGORIES?.[product.category] || product.category;
 
@@ -182,11 +181,9 @@ class ProductModal {
 
     formatPrice(price) {
         return new Intl.NumberFormat('ru-RU', {
-            style: 'currency',
-            currency: 'RUB',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
-        }).format(price);
+        }).format(price) + ' руб.';
     }
 
     // Method to handle touch/swipe gestures for mobile
